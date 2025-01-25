@@ -16,4 +16,9 @@ internal class OrdersService : IOrdersService
   {
     throw new NotImplementedException();
   }
+
+  public async Task<IEnumerable<CustomerOrder?>> GetOrdersByCustomerId(int customerId)
+  {
+    return await _ordersRepository.GetOrdersByCustomerIdAsync(customerId);
+  }
 }

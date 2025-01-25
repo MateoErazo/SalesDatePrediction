@@ -12,8 +12,8 @@ internal class CustomersService : ICustomersService
   {
     _customersRepository = customersRepository;
   }
-  public async Task<List<CustomerOrderPrediction?>> GetAllCustomersOrderPredictions()
+  public async Task<IEnumerable<CustomerOrderPrediction?>> GetAllCustomersOrderPredictions()
   {
-    throw new NotImplementedException();
+    return await _customersRepository.GetCustomersWithOrderPredictionsAsync();
   }
 }

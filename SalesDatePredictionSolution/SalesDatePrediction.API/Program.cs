@@ -11,6 +11,13 @@ builder.Services.AddCore();
 builder.Services.AddControllers();
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+//Routing
+app.UseRouting();
 
+//Auth
+app.UseAuthentication();
+app.UseAuthorization();
+
+//Controller Routes
+app.MapControllers();
 app.Run();

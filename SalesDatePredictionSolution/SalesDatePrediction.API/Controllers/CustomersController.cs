@@ -7,4 +7,14 @@ namespace SalesDatePrediction.API.Controllers;
 public class CustomersController:ControllerBase
 {
   public CustomersController() { }
+
+  [HttpGet]
+  public async Task<IActionResult> GetCustomers()
+  {
+    return Ok(new {
+      Message = "All working fine",
+      State = "success"
+    });
+  }
+
 }

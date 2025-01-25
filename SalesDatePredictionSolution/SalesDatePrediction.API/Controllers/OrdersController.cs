@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SalesDatePrediction.Core.Entities;
+using SalesDatePrediction.Core.DTO;
 using SalesDatePrediction.Core.ServiceContracts;
 
 namespace SalesDatePrediction.API.Controllers;
@@ -16,7 +16,7 @@ public class OrdersController: ControllerBase
   }
 
   [HttpGet("customers/{customerId:int}")]
-  public async Task<IEnumerable<CustomerOrder?>> GetCustomerOrdersByCustomerId(int customerId)
+  public async Task<IEnumerable<CustomerOrderDTO?>> GetCustomerOrdersByCustomerId(int customerId)
   {
     return await _ordersService.GetOrdersByCustomerId(customerId);
   } 

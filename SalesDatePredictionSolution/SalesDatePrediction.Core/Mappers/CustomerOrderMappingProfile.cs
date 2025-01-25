@@ -4,9 +4,9 @@ using SalesDatePrediction.Core.Entities;
 
 namespace SalesDatePrediction.Core.Mappers;
 
-public class CustomerOrderMappingProfile : Profile
+public class CustomerOrderMappingProfile: Profile
 {
   public CustomerOrderMappingProfile() {
-    CreateMap<CustomerOrderPrediction, CustomerOrderPredictionDTO>();
+    CreateMap<CustomerOrder, CustomerOrderDTO>();
   }
 }

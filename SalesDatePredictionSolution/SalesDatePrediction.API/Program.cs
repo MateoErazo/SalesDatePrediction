@@ -11,7 +11,7 @@ builder.Services.AddCore();
 //Add Controllers to the service collection
 builder.Services.AddControllers();
 
-builder.Services.AddAutoMapper(typeof(CustomerOrderMappingProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(CustomerOrderPredictionMappingProfile).Assembly);
 
 var app = builder.Build();
 

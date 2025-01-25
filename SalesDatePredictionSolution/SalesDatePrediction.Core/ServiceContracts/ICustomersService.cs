@@ -1,8 +1,8 @@
-﻿using SalesDatePrediction.Core.Entities;
+﻿using SalesDatePrediction.Core.DTO;
 
 namespace SalesDatePrediction.Core.ServiceContracts;
 
 public interface ICustomersService
 {
-  Task<IEnumerable<CustomerOrderPrediction?>> GetAllCustomersOrderPredictions();
+  Task<IEnumerable<CustomerOrderPredictionDTO?>> GetAllCustomersOrderPredictions();
 }

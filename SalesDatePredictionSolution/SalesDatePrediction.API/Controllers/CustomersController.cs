@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SalesDatePrediction.Core.Entities;
+using SalesDatePrediction.Core.DTO;
 using SalesDatePrediction.Core.ServiceContracts;
 
 namespace SalesDatePrediction.API.Controllers;
@@ -16,7 +16,7 @@ public class CustomersController:ControllerBase
   }
 
   [HttpGet("order-predictions")]
-  public async Task<IEnumerable<CustomerOrderPrediction?>> GetAllCustomersWithOrdersPredictions()
+  public async Task<IEnumerable<CustomerOrderPredictionDTO?>> GetAllCustomersWithOrdersPredictions()
   {
     return await _customersService.GetAllCustomersOrderPredictions();
   }

@@ -1,4 +1,5 @@
-﻿using SalesDatePrediction.Core.Entities;
+﻿using Dapper;
+using SalesDatePrediction.Core.Entities;
 using SalesDatePrediction.Core.RepositoryContracts;
 using SalesDatePrediction.Infrastructure.DbContext;
 
@@ -12,8 +13,15 @@ internal class EmployeesRepository : IEmployeesRepository
   {
     _dbContext = dbContext;
   }
-  public async Task<List<Employee?>> GetEmployeesAsync()
+  public async Task<IEnumerable<Employee?>> GetEmployeesAsync()
   {
-    throw new NotImplementedException();
+    string query = @"SELECT 
+                  emp.empid AS Empid,
+                  CONCAT(emp.firstname,' ', emp.lastname) AS FullName
+                  FROM
+                  HR.Employees emp
+                  ORDER BY emp.empid";
+
+    return await _dbContext.DbConnection.QueryAsync<Employee>(query);
   }
 }

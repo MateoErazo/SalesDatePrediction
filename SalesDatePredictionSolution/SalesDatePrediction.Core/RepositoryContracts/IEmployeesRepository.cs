@@ -4,5 +4,5 @@ namespace SalesDatePrediction.Core.RepositoryContracts;
 
 public interface IEmployeesRepository
 {
-  Task<List<Employee?>> GetEmployeesAsync();
+  Task<IEnumerable<Employee?>> GetEmployeesAsync();
 }

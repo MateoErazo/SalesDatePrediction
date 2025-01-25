@@ -15,8 +15,6 @@
     <Folder Include="DTO\" />
     <Folder Include="Mappers\" />
     <Folder Include="Services\" />
-    <Folder Include="ServiceContracts\" />
-    <Folder Include="RepositoryContracts\" />
   </ItemGroup>
 
 </Project>

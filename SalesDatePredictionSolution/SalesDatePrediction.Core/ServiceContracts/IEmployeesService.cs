@@ -1,8 +1,8 @@
-﻿using SalesDatePrediction.Core.Entities;
+﻿using SalesDatePrediction.Core.DTO;
 
 namespace SalesDatePrediction.Core.ServiceContracts;
 
 public interface IEmployeesService
 {
-  Task<List<Employee?>> GetAllEmployees();
+  Task<IEnumerable<EmployeeDTO?>> GetAllEmployees();
 }

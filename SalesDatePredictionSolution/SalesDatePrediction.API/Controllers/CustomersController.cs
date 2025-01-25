@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalesDatePrediction.Core.Entities;
+using SalesDatePrediction.Core.ServiceContracts;
 
 namespace SalesDatePrediction.API.Controllers;
 
@@ -6,15 +8,17 @@ namespace SalesDatePrediction.API.Controllers;
 [Route("api/[controller]")]
 public class CustomersController:ControllerBase
 {
-  public CustomersController() { }
+  private readonly ICustomersService _customersService;
 
-  [HttpGet]
-  public async Task<IActionResult> GetCustomers()
+  public CustomersController(ICustomersService customersService)
   {
-    return Ok(new {
-      Message = "All working fine",
-      State = "success"
-    });
+    _customersService = customersService;
+  }
+
+  [HttpGet("order-predictions")]
+  public async Task<IEnumerable<CustomerOrderPrediction?>> GetAllCustomersWithOrdersPredictions()
+  {
+    return await _customersService.GetAllCustomersOrderPredictions();
   }
 
 }

@@ -4,5 +4,5 @@ namespace SalesDatePrediction.Core.RepositoryContracts;
 
 public interface ICustomersRepository
 {
-  Task<List<CustomerOrderPrediction?>> GetCustomersWithOrderPredictionsAsync();
+  Task<IEnumerable<CustomerOrderPrediction?>> GetCustomersWithOrderPredictionsAsync();
 }

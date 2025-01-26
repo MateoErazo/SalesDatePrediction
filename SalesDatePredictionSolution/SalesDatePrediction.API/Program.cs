@@ -12,6 +12,15 @@ builder.Services.AddCore();
 //Add Controllers to the service collection
 builder.Services.AddControllers();
 
+//CORS
+builder.Services.AddCors(options =>
+{
+  options.AddDefaultPolicy(corsOptions =>
+  {
+    corsOptions.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+  });
+});
+
 builder.Services.AddAutoMapper(typeof(CustomerOrderPredictionMappingProfile).Assembly);
 
 //Build the web application

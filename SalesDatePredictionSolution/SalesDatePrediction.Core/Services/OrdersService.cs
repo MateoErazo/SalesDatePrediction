@@ -28,30 +28,14 @@ internal class OrdersService : IOrdersService
     _shippersRepository = shippersRepository;
     _mapper = mapper;
   }
-  public async Task<OrderCreationResultDTO?> CreateOrder(OrderCreationDTO orderCreationDTO)
-  {
-    if (orderCreationDTO == null) return null;
 
-    Employee? employee = await _employeesRepository.GetEmployeeByIdAsync(orderCreationDTO.Empid);
-    if (employee == null) return null;
-
-    Shipper? shipper = await _shippersRepository.GetShipperByIdAsync(orderCreationDTO.Shipperid);
-    if (shipper == null) return null;
-
-    Order order = _mapper.Map<Order>(orderCreationDTO);
-    Order? orderCreated = await _ordersRepository.AddOrderAsync(order);
-
-    if (orderCreated == null) return null;
-
-    return _mapper.Map<OrderCreationResultDTO>(orderCreated) 
-      with { Success = true};
-  }
-
-  public async Task<OrderCreationResultDTO?> CreateOrderWithProduct(OrderWithProductCreationDTO orderWithProductCreation)
+  public async Task<OrderCreationResultDTO?> 
+    CreateOrderWithProduct(OrderWithProductCreationDTO orderWithProductCreation)
   {
     if (orderWithProductCreation == null) return null;
 
-    Product? product = await _productsRepository.GetProductByIdAsync(orderWithProductCreation.Productid);
+    Product? product = await _productsRepository
+      .GetProductByIdAsync(orderWithProductCreation.Productid);
 
     if (product == null) return null;
 
@@ -59,20 +43,19 @@ internal class OrdersService : IOrdersService
 
     if(orderCreationDTO == null) return null;
 
-    OrderCreationResultDTO? orderCreationResult = await CreateOrder(orderCreationDTO);
+    bool isCorrectOrder = await CheckOrderCreationDependenciesExistInDb(orderCreationDTO);
+    if (!isCorrectOrder) return null;
 
-    if (orderCreationResult == null) return null;
-
+    Order order = _mapper.Map<Order>(orderCreationDTO);
     OrderDetails orderDetails = _mapper.Map<OrderDetails>(orderWithProductCreation);
-    orderDetails.Orderid = orderCreationResult.Orderid;
 
-    OrderDetails? orderWithProductCreated =
-      await _ordersRepository.AddItemToOrderAsync(orderDetails);
+    Order? orderCreated = 
+      await _ordersRepository.AddOrderWithProductAsync(order,orderDetails);
 
-    if (orderWithProductCreated == null) return null;
+    if (orderCreated == null) return null;
 
-    return orderCreationResult;
-
+    return _mapper.Map<OrderCreationResultDTO>(orderCreated)
+      with { Success = true };
   }
 
   public async Task<IEnumerable<OrderDTO?>> GetOrdersByCustomerId(int customerId)
@@ -81,5 +64,18 @@ internal class OrdersService : IOrdersService
       await _ordersRepository.GetOrdersByCustomerIdAsync(customerId);
 
     return _mapper.Map<IEnumerable<OrderDTO?>>(orders);
+  }
+
+  public async Task<bool> CheckOrderCreationDependenciesExistInDb(OrderCreationDTO orderCreationDTO)
+  {
+    if (orderCreationDTO == null) return false;
+
+    Employee? employee = await _employeesRepository.GetEmployeeByIdAsync(orderCreationDTO.Empid);
+    if (employee == null) return false;
+
+    Shipper? shipper = await _shippersRepository.GetShipperByIdAsync(orderCreationDTO.Shipperid);
+    if (shipper == null) return false;
+
+    return true;
   }
 }

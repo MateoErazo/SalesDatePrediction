@@ -6,6 +6,6 @@ namespace SalesDatePrediction.Core.ServiceContracts;
 public interface IOrdersService
 {
   Task<IEnumerable<OrderDTO?>> GetOrdersByCustomerId(int customerId);
-  Task<OrderCreationResultDTO?> CreateOrder(OrderCreationDTO orderCreation);
+  Task<bool> CheckOrderCreationDependenciesExistInDb(OrderCreationDTO orderCreation);
   Task<OrderCreationResultDTO?> CreateOrderWithProduct(OrderWithProductCreationDTO orderWithProductCreation);
 }

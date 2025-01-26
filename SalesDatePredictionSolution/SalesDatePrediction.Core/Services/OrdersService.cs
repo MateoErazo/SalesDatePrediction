@@ -3,6 +3,7 @@ using SalesDatePrediction.Core.DTO;
 using SalesDatePrediction.Core.Entities;
 using SalesDatePrediction.Core.RepositoryContracts;
 using SalesDatePrediction.Core.ServiceContracts;
+using System.Runtime.CompilerServices;
 
 namespace SalesDatePrediction.Core.Services;
 
@@ -25,6 +26,27 @@ internal class OrdersService : IOrdersService
 
     return _mapper.Map<OrderCreationResultDTO>(orderCreated) 
       with { Success = true};
+  }
+
+  public async Task<OrderCreationResultDTO?> CreateOrderWithProduct(OrderWithProductCreationDTO orderWithProductCreation)
+  {
+    OrderCreationDTO? orderCreationDTO = orderWithProductCreation.Order;
+
+    if(orderCreationDTO == null) return null;
+
+    OrderCreationResultDTO? orderCreationResult = await CreateOrder(orderCreationDTO);
+
+    if (orderCreationResult == null) return null;
+
+    OrderDetails orderDetails = _mapper.Map<OrderDetails>(orderWithProductCreation);
+    orderDetails.Orderid = orderCreationResult.Orderid;
+
+    OrderDetails? orderWithProductCreated = 
+      await _ordersRepository.AddItemToOrder(orderDetails);
+
+    if (orderWithProductCreated == null) return null;
+
+    return orderCreationResult;
   }
 
   public async Task<IEnumerable<OrderDTO?>> GetOrdersByCustomerId(int customerId)

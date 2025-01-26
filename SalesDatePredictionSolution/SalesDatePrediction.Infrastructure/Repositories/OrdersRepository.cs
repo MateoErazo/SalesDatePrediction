@@ -13,6 +13,20 @@ internal class OrdersRepository : IOrdersRepository
   {
     _dbContext = dbContext;
   }
+
+  public async Task<OrderDetails?> AddItemToOrder(OrderDetails orderDetails)
+  {
+    string query = @"INSERT INTO Sales.OrderDetails 
+                  (orderid, productid, unitprice, qty, discount)
+                  VALUES (@Orderid, @Productid, @Unitprice, @Qty, @Discount);";
+
+    int amountRowsAffected = await _dbContext.DbConnection.ExecuteAsync(query, orderDetails);
+
+    if (amountRowsAffected <= 0) { return null; }
+
+    return orderDetails;
+  }
+
   public async Task<Order?> AddOrderAsync(Order order)
   {
     string query = @"INSERT INTO Sales.Orders 
@@ -26,14 +40,16 @@ internal class OrdersRepository : IOrdersRepository
                    shippeddate, 
                    freight, 
                    shipcountry)
+                  OUTPUT INSERTED.orderid
                   VALUES (@Empid, @Shipperid, @Shipname, @Shipaddress, 
                           @Shipcity, @Orderdate, @Requireddate, @Shippeddate, 
                           @Freight, @Shipcountry);";
 
-    int amountRowsAffected = await _dbContext.DbConnection.ExecuteAsync(query, order);
+    int orderId = await _dbContext.DbConnection.ExecuteScalarAsync<int>(query, order);
 
-    if (amountRowsAffected <= 0) { return  null; }
+    if (orderId == 0) { return  null; }
 
+    order.Orderid = orderId;
     return order;
   }
 

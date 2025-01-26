@@ -7,4 +7,6 @@ public interface IOrdersRepository
   Task<IEnumerable<Order?>> GetOrdersByCustomerIdAsync(int customerId);
 
   Task<Order?> AddOrderAsync(Order order);
+
+  Task<OrderDetails?> AddItemToOrder(OrderDetails orderDetails); 
 }

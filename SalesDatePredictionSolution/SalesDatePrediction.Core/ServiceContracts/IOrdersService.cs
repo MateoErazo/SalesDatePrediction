@@ -7,4 +7,5 @@ public interface IOrdersService
 {
   Task<IEnumerable<OrderDTO?>> GetOrdersByCustomerId(int customerId);
   Task<OrderCreationResultDTO?> CreateOrder(OrderCreationDTO orderCreation);
+  Task<OrderCreationResultDTO?> CreateOrderWithProduct(OrderWithProductCreationDTO orderWithProductCreation);
 }

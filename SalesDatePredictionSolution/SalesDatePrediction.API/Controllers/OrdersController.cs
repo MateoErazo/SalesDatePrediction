@@ -22,8 +22,8 @@ public class OrdersController: ControllerBase
   }
 
   [HttpPost]
-  public async Task<OrderCreationResultDTO?> CreateOrder([FromBody] OrderCreationDTO order)
+  public async Task<OrderCreationResultDTO?> CreateOrderWithProduct([FromBody] OrderWithProductCreationDTO orderWithProduct)
   {
-    return await _ordersService.CreateOrder(order);
+    return await _ordersService.CreateOrderWithProduct(orderWithProduct);
   }
 }

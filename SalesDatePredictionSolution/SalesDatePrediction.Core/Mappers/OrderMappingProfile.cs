@@ -10,5 +10,7 @@ public class OrderMappingProfile: Profile
     CreateMap<Order, OrderDTO>();
     CreateMap<OrderCreationDTO, Order>();
     CreateMap<Order, OrderCreationResultDTO>();
+    CreateMap<OrderWithProductCreationDTO, OrderCreationDTO>();
+    CreateMap<OrderWithProductCreationDTO, OrderDetails>();
   }
 }

@@ -2,6 +2,7 @@
 
 public record OrderCreationResultDTO (
   bool Success,
+  int Orderid,
   int Empid,
   int Shipperid,
   string? Shipname,
@@ -16,5 +17,5 @@ public record OrderCreationResultDTO (
 {
   public OrderCreationResultDTO()
     :this(default,default,default,default,default,default,
-       default, default, default, default, default) { }
+       default, default, default, default, default,default) { }
 };

@@ -1,6 +1,4 @@
-﻿
-
-namespace SalesDatePrediction.Core.Entities;
+﻿namespace SalesDatePrediction.Core.Entities;
 
 public class Employee
 {

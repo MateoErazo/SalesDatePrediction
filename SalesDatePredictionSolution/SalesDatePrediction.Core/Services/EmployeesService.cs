@@ -23,4 +23,13 @@ internal class EmployeesService : IEmployeesService
 
     return _mapper.Map<IEnumerable<EmployeeDTO?>>(employees);
   }
+
+  public async Task<EmployeeDTO?> GetEmployeeById(int employeeId)
+  {
+    Employee? employee = await _employeesRepository.GetEmployeeByIdAsync(employeeId);
+
+    if (employee == null) return null;
+
+    return _mapper.Map<EmployeeDTO?>(employee);
+  }
 }

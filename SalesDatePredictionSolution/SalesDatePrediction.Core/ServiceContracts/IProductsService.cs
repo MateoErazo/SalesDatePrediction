@@ -6,5 +6,5 @@ namespace SalesDatePrediction.Core.ServiceContracts;
 public interface IProductsService
 {
   Task<IEnumerable<ProductDTO?>> GetAllProducts();
-  Task CreateProduct(Product product);
+  Task<ProductDTO?> GetProductById(int productId);
 }

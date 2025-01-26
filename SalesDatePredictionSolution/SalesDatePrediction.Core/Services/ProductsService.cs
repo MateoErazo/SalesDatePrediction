@@ -16,15 +16,20 @@ internal class ProductsService : IProductsService
     _productsRepository = productsRepository;
     _mapper = mapper;
   }
-  public async Task CreateProduct(Product product)
-  {
-    throw new NotImplementedException();
-  }
 
   public async Task<IEnumerable<ProductDTO?>> GetAllProducts()
   {
     IEnumerable<Product?> products = await _productsRepository.GetProductsAsync();
 
     return _mapper.Map<IEnumerable<ProductDTO?>>(products);
+  }
+
+  public async Task<ProductDTO?> GetProductById(int productId)
+  {
+    Product? product = await _productsRepository.GetProductByIdAsync(productId);
+
+    if (product == null) return null;
+
+    return _mapper.Map<ProductDTO>(product);
   }
 }

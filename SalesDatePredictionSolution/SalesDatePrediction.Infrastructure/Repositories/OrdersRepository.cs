@@ -14,7 +14,7 @@ internal class OrdersRepository : IOrdersRepository
     _dbContext = dbContext;
   }
 
-  public async Task<OrderDetails?> AddItemToOrder(OrderDetails orderDetails)
+  public async Task<OrderDetails?> AddItemToOrderAsync(OrderDetails orderDetails)
   {
     string query = @"INSERT INTO Sales.OrderDetails 
                   (orderid, productid, unitprice, qty, discount)

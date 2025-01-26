@@ -1,4 +1,5 @@
-﻿using SalesDatePrediction.Core.Entities;
+﻿using Dapper;
+using SalesDatePrediction.Core.Entities;
 using SalesDatePrediction.Core.RepositoryContracts;
 using SalesDatePrediction.Infrastructure.DbContext;
 
@@ -12,8 +13,15 @@ internal class ShippersRepository : IShippersRepository
   {
     _dbContext = dbContext;
   }
-  public async Task<List<Shipper?>> GetShippersAsync()
+  public async Task<IEnumerable<Shipper?>> GetShippersAsync()
   {
-    throw new NotImplementedException();
+    string query = @"SELECT
+                  ship.shipperid AS Shipperid,
+                  ship.companyname AS Companyname
+                  FROM
+                  Sales.Shippers ship
+                  ORDER BY ship.shipperid";
+
+    return await _dbContext.DbConnection.QueryAsync<Shipper>(query);
   }
 }

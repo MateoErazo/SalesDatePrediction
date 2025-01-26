@@ -4,5 +4,5 @@ namespace SalesDatePrediction.Core.RepositoryContracts;
 
 public interface IShippersRepository
 {
-  Task<List<Shipper?>> GetShippersAsync();
+  Task<IEnumerable<Shipper?>> GetShippersAsync();
 }

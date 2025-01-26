@@ -10,15 +10,34 @@ namespace SalesDatePrediction.Core.Services;
 internal class OrdersService : IOrdersService
 {
   private readonly IOrdersRepository _ordersRepository;
+  private readonly IProductsRepository _productsRepository;
+  private readonly IEmployeesRepository _employeesRepository;
+  private readonly IShippersRepository _shippersRepository;
   private readonly IMapper _mapper;
 
-  public OrdersService(IOrdersRepository ordersRepository, IMapper mapper)
+  public OrdersService(
+    IOrdersRepository ordersRepository,
+    IProductsRepository productsRepository,
+    IEmployeesRepository employeesRepository,
+    IShippersRepository shippersRepository,
+    IMapper mapper)
   {
     _ordersRepository = ordersRepository;
+    _productsRepository = productsRepository;
+    _employeesRepository = employeesRepository;
+    _shippersRepository = shippersRepository;
     _mapper = mapper;
   }
   public async Task<OrderCreationResultDTO?> CreateOrder(OrderCreationDTO orderCreationDTO)
   {
+    if (orderCreationDTO == null) return null;
+
+    Employee? employee = await _employeesRepository.GetEmployeeByIdAsync(orderCreationDTO.Empid);
+    if (employee == null) return null;
+
+    Shipper? shipper = await _shippersRepository.GetShipperByIdAsync(orderCreationDTO.Shipperid);
+    if (shipper == null) return null;
+
     Order order = _mapper.Map<Order>(orderCreationDTO);
     Order? orderCreated = await _ordersRepository.AddOrderAsync(order);
 
@@ -30,6 +49,12 @@ internal class OrdersService : IOrdersService
 
   public async Task<OrderCreationResultDTO?> CreateOrderWithProduct(OrderWithProductCreationDTO orderWithProductCreation)
   {
+    if (orderWithProductCreation == null) return null;
+
+    Product? product = await _productsRepository.GetProductByIdAsync(orderWithProductCreation.Productid);
+
+    if (product == null) return null;
+
     OrderCreationDTO? orderCreationDTO = orderWithProductCreation.Order;
 
     if(orderCreationDTO == null) return null;
@@ -41,12 +66,13 @@ internal class OrdersService : IOrdersService
     OrderDetails orderDetails = _mapper.Map<OrderDetails>(orderWithProductCreation);
     orderDetails.Orderid = orderCreationResult.Orderid;
 
-    OrderDetails? orderWithProductCreated = 
-      await _ordersRepository.AddItemToOrder(orderDetails);
+    OrderDetails? orderWithProductCreated =
+      await _ordersRepository.AddItemToOrderAsync(orderDetails);
 
     if (orderWithProductCreated == null) return null;
 
     return orderCreationResult;
+
   }
 
   public async Task<IEnumerable<OrderDTO?>> GetOrdersByCustomerId(int customerId)

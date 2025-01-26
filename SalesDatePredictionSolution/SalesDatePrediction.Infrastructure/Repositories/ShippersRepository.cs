@@ -13,6 +13,20 @@ internal class ShippersRepository : IShippersRepository
   {
     _dbContext = dbContext;
   }
+
+  public Task<Shipper?> GetShipperByIdAsync(int shipperId)
+  {
+    string query = @"SELECT
+                  ship.shipperid AS Shipperid,
+                  ship.companyname AS Companyname,
+                  ship.phone AS Phone
+                  FROM Sales.Shippers ship
+                  WHERE ship.shipperid = @ShipperId";
+
+    return _dbContext.DbConnection
+      .QueryFirstOrDefaultAsync<Shipper>(query, new { ShipperId = shipperId});
+  }
+
   public async Task<IEnumerable<Shipper?>> GetShippersAsync()
   {
     string query = @"SELECT

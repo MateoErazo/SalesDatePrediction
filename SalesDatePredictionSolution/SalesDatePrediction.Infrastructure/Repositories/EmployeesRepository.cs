@@ -13,6 +13,22 @@ internal class EmployeesRepository : IEmployeesRepository
   {
     _dbContext = dbContext;
   }
+
+  public async Task<Employee?> GetEmployeeByIdAsync(int employeeId)
+  {
+    string query = @"SELECT 
+                  emp.empid AS Empid,
+                  CONCAT(emp.firstname,' ', emp.lastname) AS FullName,
+                  emp.phone AS Phone,
+                  emp.address AS [Address],
+                  emp.city AS City,
+                  emp.country AS Country
+                  FROM HR.Employees emp
+                  WHERE emp.empid = @EmployeeId";
+
+    return await _dbContext.DbConnection.QueryFirstOrDefaultAsync<Employee?>(query, new {EmployeeId = employeeId});
+  }
+
   public async Task<IEnumerable<Employee?>> GetEmployeesAsync()
   {
     string query = @"SELECT 

@@ -8,5 +8,5 @@ public interface IOrdersRepository
 
   Task<Order?> AddOrderAsync(Order order);
 
-  Task<OrderDetails?> AddItemToOrder(OrderDetails orderDetails); 
+  Task<OrderDetails?> AddItemToOrderAsync(OrderDetails orderDetails); 
 }

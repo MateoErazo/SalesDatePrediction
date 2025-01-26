@@ -13,9 +13,20 @@ internal class ProductsRepository : IProductsRepository
   {
     _dbContext = dbContext;
   }
-  public async Task AddProductAsync(Product product)
+
+  public async Task<Product?> GetProductByIdAsync(int productId)
   {
-    throw new NotImplementedException();
+    string query = @"SELECT
+                  prod.productid AS Productid,
+                  prod.productname AS Productname,
+                  prod.unitprice AS Unitprice,
+                  prod.discontinued AS Discontinued,
+                  prod.supplierid AS Supplierid,
+                  prod.categoryid AS Categoryid
+                  FROM Production.Products prod
+                  WHERE prod.productid = @ProductId";
+
+    return await _dbContext.DbConnection.QueryFirstOrDefaultAsync<Product>(query,new { ProductId = productId});
   }
 
   public async Task<IEnumerable<Product?>> GetProductsAsync()

@@ -22,4 +22,13 @@ internal class ShippersService : IShippersService
 
     return _mapper.Map<IEnumerable<ShipperDTO?>>(shippers);
   }
+
+  public async Task<ShipperDTO?> GetShipperById(int shipperId)
+  {
+    Shipper? shipper = await _shippersRepository.GetShipperByIdAsync(shipperId);
+
+    if(shipper == null) return null;
+
+    return _mapper.Map<ShipperDTO>(shipper);
+  }
 }

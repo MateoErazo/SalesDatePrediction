@@ -15,8 +15,4 @@
     <ProjectReference Include="..\SalesDatePrediction.Infrastructure\SalesDatePrediction.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Middlewares\" />
-  </ItemGroup>
-
 </Project>

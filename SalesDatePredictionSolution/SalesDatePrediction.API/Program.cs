@@ -1,3 +1,4 @@
+using SalesDatePrediction.API.Middlewares;
 using SalesDatePrediction.Core;
 using SalesDatePrediction.Core.Mappers;
 using SalesDatePrediction.Infrastructure;
@@ -13,7 +14,11 @@ builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(typeof(CustomerOrderPredictionMappingProfile).Assembly);
 
+//Build the web application
 var app = builder.Build();
+
+//Global exception handler
+app.UseExceptionHandlingMiddleware();
 
 //Routing
 app.UseRouting();

@@ -16,16 +16,22 @@ internal class OrdersService : IOrdersService
     _ordersRepository = ordersRepository;
     _mapper = mapper;
   }
-  public async Task CreateOrder(CustomerOrder customerOrder)
+  public async Task<OrderCreationResultDTO?> CreateOrder(OrderCreationDTO orderCreationDTO)
   {
-    throw new NotImplementedException();
+    Order order = _mapper.Map<Order>(orderCreationDTO);
+    Order? orderCreated = await _ordersRepository.AddOrderAsync(order);
+
+    if (orderCreated == null) return null;
+
+    return _mapper.Map<OrderCreationResultDTO>(orderCreated) 
+      with { Success = true};
   }
 
-  public async Task<IEnumerable<CustomerOrderDTO?>> GetOrdersByCustomerId(int customerId)
+  public async Task<IEnumerable<OrderDTO?>> GetOrdersByCustomerId(int customerId)
   {
-    IEnumerable<CustomerOrder?> orders = 
+    IEnumerable<Order?> orders = 
       await _ordersRepository.GetOrdersByCustomerIdAsync(customerId);
 
-    return _mapper.Map<IEnumerable<CustomerOrderDTO?>>(orders);
+    return _mapper.Map<IEnumerable<OrderDTO?>>(orders);
   }
 }

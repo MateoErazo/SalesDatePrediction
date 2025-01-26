@@ -1,8 +1,8 @@
-﻿using SalesDatePrediction.Core.Entities;
+﻿using SalesDatePrediction.Core.DTO;
 
 namespace SalesDatePrediction.Core.ServiceContracts;
 
 public interface IShippersService
 {
-  Task<List<Shipper?>> GetAllShippers();
+  Task<IEnumerable<ShipperDTO?>> GetAllShippers();
 }

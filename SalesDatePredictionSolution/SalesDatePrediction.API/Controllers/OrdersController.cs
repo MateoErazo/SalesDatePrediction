@@ -16,8 +16,14 @@ public class OrdersController: ControllerBase
   }
 
   [HttpGet("customers/{customerId:int}")]
-  public async Task<IEnumerable<CustomerOrderDTO?>> GetCustomerOrdersByCustomerId(int customerId)
+  public async Task<IEnumerable<OrderDTO?>> GetCustomerOrdersByCustomerId(int customerId)
   {
     return await _ordersService.GetOrdersByCustomerId(customerId);
-  } 
+  }
+
+  [HttpPost]
+  public async Task<OrderCreationResultDTO?> CreateOrder([FromBody] OrderCreationDTO order)
+  {
+    return await _ordersService.CreateOrder(order);
+  }
 }

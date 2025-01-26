@@ -4,7 +4,7 @@ namespace SalesDatePrediction.Core.RepositoryContracts;
 
 public interface IOrdersRepository
 {
-  Task<IEnumerable<CustomerOrder?>> GetOrdersByCustomerIdAsync(int customerId);
+  Task<IEnumerable<Order?>> GetOrdersByCustomerIdAsync(int customerId);
 
-  Task AddOrderAsync(CustomerOrder customerOrder);
+  Task<Order?> AddOrderAsync(Order order);
 }

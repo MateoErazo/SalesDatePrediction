@@ -5,6 +5,6 @@ namespace SalesDatePrediction.Core.ServiceContracts;
 
 public interface IOrdersService
 {
-  Task<IEnumerable<CustomerOrderDTO?>> GetOrdersByCustomerId(int customerId);
-  Task CreateOrder(CustomerOrder customerOrder);
+  Task<IEnumerable<OrderDTO?>> GetOrdersByCustomerId(int customerId);
+  Task<OrderCreationResultDTO?> CreateOrder(OrderCreationDTO orderCreation);
 }

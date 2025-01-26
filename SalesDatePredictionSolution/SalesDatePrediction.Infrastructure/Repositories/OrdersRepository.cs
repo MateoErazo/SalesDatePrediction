@@ -2,6 +2,7 @@
 using SalesDatePrediction.Core.Entities;
 using SalesDatePrediction.Core.RepositoryContracts;
 using SalesDatePrediction.Infrastructure.DbContext;
+using System.Data;
 
 namespace SalesDatePrediction.Infrastructure.Repositories;
 
@@ -14,20 +15,21 @@ internal class OrdersRepository : IOrdersRepository
     _dbContext = dbContext;
   }
 
-  public async Task<OrderDetails?> AddItemToOrderAsync(OrderDetails orderDetails)
+  public async Task<OrderDetails?> 
+    AddItemToOrderAsync(OrderDetails orderDetails, IDbTransaction transaction)
   {
     string query = @"INSERT INTO Sales.OrderDetails 
                   (orderid, productid, unitprice, qty, discount)
                   VALUES (@Orderid, @Productid, @Unitprice, @Qty, @Discount);";
 
-    int amountRowsAffected = await _dbContext.DbConnection.ExecuteAsync(query, orderDetails);
+    int amountRowsAffected = await _dbContext.DbConnection.ExecuteAsync(query, orderDetails, transaction);
 
     if (amountRowsAffected <= 0) { return null; }
 
     return orderDetails;
   }
 
-  public async Task<Order?> AddOrderAsync(Order order)
+  public async Task<Order?> AddOrderAsync(Order order, IDbTransaction transaction)
   {
     string query = @"INSERT INTO Sales.Orders 
                   (empid, 
@@ -45,12 +47,47 @@ internal class OrdersRepository : IOrdersRepository
                           @Shipcity, @Orderdate, @Requireddate, @Shippeddate, 
                           @Freight, @Shipcountry);";
 
-    int orderId = await _dbContext.DbConnection.ExecuteScalarAsync<int>(query, order);
+    int orderId = await _dbContext.DbConnection.ExecuteScalarAsync<int>(query, order, transaction);
 
     if (orderId == 0) { return  null; }
 
     order.Orderid = orderId;
     return order;
+  }
+
+  public async Task<Order?> AddOrderWithProductAsync(Order order, OrderDetails orderDetails)
+  {
+    //Start Transaction
+    _dbContext.DbConnection.Open();
+    using var transaction = _dbContext.DbConnection.BeginTransaction();
+    
+    try
+    {
+      Order? orderCreated = await AddOrderAsync(order, transaction);
+
+      if (orderCreated == null) {
+        transaction.Rollback();
+        return null;
+      }
+
+      orderDetails.Orderid = orderCreated.Orderid;
+      OrderDetails? OrderWithProductAdded = await AddItemToOrderAsync(orderDetails, transaction);
+
+      if (OrderWithProductAdded == null)
+      {
+        transaction.Rollback();
+        return null;
+      }
+
+      transaction.Commit();
+      return orderCreated;
+      //End Transaction
+    }
+    catch (Exception ex) {
+      //Reverse transaction
+      transaction.Rollback();
+      return null;
+    }
   }
 
   public async Task<IEnumerable<Order?>> GetOrdersByCustomerIdAsync(int customerId)

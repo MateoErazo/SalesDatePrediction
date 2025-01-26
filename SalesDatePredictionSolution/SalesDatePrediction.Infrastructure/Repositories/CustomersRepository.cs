@@ -52,7 +52,7 @@ internal class CustomersRepository : ICustomersRepository
           FROM LastOrders laor
           INNER JOIN Averages avgs ON laor.custid = avgs.custid
           INNER JOIN Sales.Customers cust ON cust.custid = laor.custid
-          ORDER BY laor.custid;
+          ORDER BY laor.LastOrderDate DESC;
       ";
 
     return await _dbContext.DbConnection.QueryAsync<CustomerOrderPrediction>(query);

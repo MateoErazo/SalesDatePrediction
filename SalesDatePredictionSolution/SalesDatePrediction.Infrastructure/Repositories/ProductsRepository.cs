@@ -1,4 +1,5 @@
-﻿using SalesDatePrediction.Core.Entities;
+﻿using Dapper;
+using SalesDatePrediction.Core.Entities;
 using SalesDatePrediction.Core.RepositoryContracts;
 using SalesDatePrediction.Infrastructure.DbContext;
 
@@ -17,8 +18,15 @@ internal class ProductsRepository : IProductsRepository
     throw new NotImplementedException();
   }
 
-  public async Task<List<Product?>> GetProductsAsync()
+  public async Task<IEnumerable<Product?>> GetProductsAsync()
   {
-    throw new NotImplementedException();
+    string query = @"SELECT
+                  prod.productid AS Productid,
+                  prod.productname AS Productname
+                  FROM
+                  Production.Products prod
+                  ORDER BY prod.productname";
+
+    return await _dbContext.DbConnection.QueryAsync<Product?>(query);
   }
 }

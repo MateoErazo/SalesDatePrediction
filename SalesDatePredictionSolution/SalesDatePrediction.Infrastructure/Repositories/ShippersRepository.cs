@@ -20,7 +20,7 @@ internal class ShippersRepository : IShippersRepository
                   ship.companyname AS Companyname
                   FROM
                   Sales.Shippers ship
-                  ORDER BY ship.shipperid";
+                  ORDER BY ship.companyname";
 
     return await _dbContext.DbConnection.QueryAsync<Shipper>(query);
   }

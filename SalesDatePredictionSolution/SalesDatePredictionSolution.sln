@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesDatePrediction.Infrast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesDatePrediction.Core", "SalesDatePrediction.Core\SalesDatePrediction.Core.csproj", "{36DF66DD-E749-4995-BDFA-DFD6236E9200}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesDatePrediction.Tests", "SalesDatePrediction.Tests\SalesDatePrediction.Tests.csproj", "{B7C0B866-521D-4EB8-8B2C-A8F6BEB5B200}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{36DF66DD-E749-4995-BDFA-DFD6236E9200}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36DF66DD-E749-4995-BDFA-DFD6236E9200}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36DF66DD-E749-4995-BDFA-DFD6236E9200}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7C0B866-521D-4EB8-8B2C-A8F6BEB5B200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C0B866-521D-4EB8-8B2C-A8F6BEB5B200}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C0B866-521D-4EB8-8B2C-A8F6BEB5B200}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7C0B866-521D-4EB8-8B2C-A8F6BEB5B200}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,7 +4,7 @@ namespace SalesDatePrediction.Core.RepositoryContracts;
 
 public interface IProductsRepository
 {
-  Task<List<Product?>> GetProductsAsync();
+  Task<IEnumerable<Product?>> GetProductsAsync();
 
   Task AddProductAsync(Product product);
 }

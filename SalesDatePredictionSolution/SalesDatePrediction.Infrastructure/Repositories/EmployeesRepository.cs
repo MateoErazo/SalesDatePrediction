@@ -20,7 +20,7 @@ internal class EmployeesRepository : IEmployeesRepository
                   CONCAT(emp.firstname,' ', emp.lastname) AS FullName
                   FROM
                   HR.Employees emp
-                  ORDER BY emp.empid";
+                  ORDER BY FullName";
 
     return await _dbContext.DbConnection.QueryAsync<Employee>(query);
   }

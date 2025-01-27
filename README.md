@@ -1,4 +1,4 @@
-• Información relevante para hacer build y ejecutar el proyecto.
+**• Información relevante para hacer build y ejecutar el proyecto.**
 
 1.El proyecto se desarrollo utilizando la ultima versión de .NET (la cual es la version 9) por lo que es importante tener esta misma version instalada antes de ejecutar el proyecto.
 
@@ -10,7 +10,7 @@ Server Name, User Id y Password. El nombre de la base de datos No ya que este de
 4.Ejecutar el proyecto con el perfil Https (El puerto por defecto es el 7016 pero si ustedes lo tienen ocupado, este cambiara al 5052 y se debera actualizar el puerto en los endpoints mencionado a continuación)
 
 
-Endpoints para probar el proyecto:
+**Endpoints para probar el proyecto (Pueden utilizar POSTMAN):**
 
 GET https://localhost:7016/api/customers/order-predictions
 
@@ -46,7 +46,7 @@ BODY:
  
 
 
-• Cualquier información relevante sobre la prueba que se quiera mencionar para ser tenida en cuenta durante la revisión.
+**• Cualquier información relevante sobre la prueba que se quiera mencionar para ser tenida en cuenta durante la revisión.**
 
 
 1.Se implemento la arquitectura limpia para la estructuracion del proyecto y se tuvieron en cuenta los principios SOLID.
@@ -61,7 +61,7 @@ BODY:
 
 
 
-• Breve explicación sobre como se ejecutó la prueba.
+**• Breve explicación sobre como se ejecutó la prueba.**
 
 
 1. Realicé las pruebas consumiendo los endpoints de la aplicacion directamente desde Postman.

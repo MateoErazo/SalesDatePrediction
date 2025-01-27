@@ -45,7 +45,9 @@ BODY:
 }
  
 
+
 • Cualquier información relevante sobre la prueba que se quiera mencionar para ser tenida en cuenta durante la revisión.
+
 
 1.Se implemento la arquitectura limpia para la estructuracion del proyecto y se tuvieron en cuenta los principios SOLID.
 
@@ -58,7 +60,9 @@ BODY:
 5.Se habilito CORS para que pueda recibir solicitudes desde cualquier origen, metodo y cabecera con el motivo de facilitar el proceso de revision. Sin embargo solo se deberia de agregar los origines especificos que van a consumir el API.
 
 
+
 • Breve explicación sobre como se ejecutó la prueba.
+
 
 1. Realicé las pruebas consumiendo los endpoints de la aplicacion directamente desde Postman.
 

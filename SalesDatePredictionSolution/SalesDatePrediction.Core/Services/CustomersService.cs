@@ -11,16 +11,24 @@ internal class CustomersService : ICustomersService
   private readonly ICustomersRepository _customersRepository;
   private readonly IMapper _mapper;
 
-  public CustomersService(ICustomersRepository customersRepository, IMapper mapper)
+  public CustomersService(ICustomersRepository customersRepository, 
+    IMapper mapper)
   {
     _customersRepository = customersRepository;
     _mapper = mapper;
   }
-  public async Task<IEnumerable<CustomerOrderPredictionDTO?>> GetAllCustomersOrderPredictions()
+  public async Task<DbResultsWithPaginationValuesDTO<CustomerOrderPredictionDTO>> GetAllCustomersOrderPredictions(PaginationDTO paginationDTO)
   {
-    IEnumerable<CustomerOrderPrediction?> predictions = 
-      await _customersRepository.GetCustomersWithOrderPredictionsAsync();
 
-    return _mapper.Map<IEnumerable<CustomerOrderPredictionDTO?>>(predictions);
+    DbResultsWithPaginationValuesDTO<CustomerOrderPrediction> customerPredictions = 
+      await _customersRepository.GetCustomersWithOrderPredictionsAsync(paginationDTO);
+
+    return _mapper.Map<DbResultsWithPaginationValuesDTO<CustomerOrderPredictionDTO>>(customerPredictions);
+  }
+
+  public async Task<CustomerDTO?> GetCustomerById(int customerId)
+  {
+    Customer? customer = await _customersRepository.GetCustomerByIdAsync(customerId);
+    return _mapper.Map<CustomerDTO?>(customer);
   }
 }

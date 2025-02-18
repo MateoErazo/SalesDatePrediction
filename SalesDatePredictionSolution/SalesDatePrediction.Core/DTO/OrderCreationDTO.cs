@@ -1,8 +1,6 @@
-﻿using SalesDatePrediction.Core.Entities;
-using System.Net;
-
-namespace SalesDatePrediction.Core.DTO;
+﻿namespace SalesDatePrediction.Core.DTO;
 public record OrderCreationDTO (
+  int Custid,
   int Empid, 
   int Shipperid, 
   string? Shipname, 

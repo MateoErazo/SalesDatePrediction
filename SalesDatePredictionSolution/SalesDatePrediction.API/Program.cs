@@ -13,11 +13,12 @@ builder.Services.AddCore();
 builder.Services.AddControllers();
 
 //CORS
+var allowedHosts = builder.Configuration.GetValue<string>("AllowedOrigins")!.Split(",");
 builder.Services.AddCors(options =>
 {
   options.AddDefaultPolicy(corsOptions =>
   {
-    corsOptions.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    corsOptions.WithOrigins(allowedHosts).AllowAnyMethod().AllowAnyHeader();
   });
 });
 
@@ -31,6 +32,9 @@ app.UseExceptionHandlingMiddleware();
 
 //Routing
 app.UseRouting();
+
+//CORS
+app.UseCors();
 
 //Auth
 app.UseAuthentication();

@@ -31,8 +31,17 @@ internal class OrdersRepository : IOrdersRepository
 
   public async Task<Order?> AddOrderAsync(Order order, IDbTransaction transaction)
   {
-    string query = @"INSERT INTO Sales.Orders 
-                  (empid, 
+    string customerId = "null";
+
+    if (order.Custid != 0)
+    {
+      customerId = "@Custid";
+    }
+    
+    string query = $@"INSERT INTO Sales.Orders 
+                  (
+                   custid,
+                   empid, 
                    shipperid, 
                    shipname, 
                    shipaddress, 
@@ -43,7 +52,7 @@ internal class OrdersRepository : IOrdersRepository
                    freight, 
                    shipcountry)
                   OUTPUT INSERTED.orderid
-                  VALUES (@Empid, @Shipperid, @Shipname, @Shipaddress, 
+                  VALUES ({customerId}, @Empid, @Shipperid, @Shipname, @Shipaddress, 
                           @Shipcity, @Orderdate, @Requireddate, @Shippeddate, 
                           @Freight, @Shipcountry);";
 

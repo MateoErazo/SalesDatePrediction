@@ -9,6 +9,7 @@ namespace SalesDatePrediction.Core.Services;
 
 internal class OrdersService : IOrdersService
 {
+  private readonly ICustomersRepository _customersRepository;
   private readonly IOrdersRepository _ordersRepository;
   private readonly IProductsRepository _productsRepository;
   private readonly IEmployeesRepository _employeesRepository;
@@ -16,12 +17,14 @@ internal class OrdersService : IOrdersService
   private readonly IMapper _mapper;
 
   public OrdersService(
+    ICustomersRepository customersRepository,
     IOrdersRepository ordersRepository,
     IProductsRepository productsRepository,
     IEmployeesRepository employeesRepository,
     IShippersRepository shippersRepository,
     IMapper mapper)
   {
+    _customersRepository = customersRepository;
     _ordersRepository = ordersRepository;
     _productsRepository = productsRepository;
     _employeesRepository = employeesRepository;
@@ -69,6 +72,12 @@ internal class OrdersService : IOrdersService
   public async Task<bool> CheckOrderCreationDependenciesExistInDb(OrderCreationDTO orderCreationDTO)
   {
     if (orderCreationDTO == null) return false;
+
+    if(orderCreationDTO.Custid != 0)
+    {
+      Customer? customer = await _customersRepository.GetCustomerByIdAsync(orderCreationDTO.Custid);
+      if (customer == null) return false;
+    }
 
     Employee? employee = await _employeesRepository.GetEmployeeByIdAsync(orderCreationDTO.Empid);
     if (employee == null) return false;

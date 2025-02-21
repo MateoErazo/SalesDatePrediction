@@ -18,7 +18,8 @@ builder.Services.AddCors(options =>
 {
   options.AddDefaultPolicy(corsOptions =>
   {
-    corsOptions.WithOrigins(allowedHosts).AllowAnyMethod().AllowAnyHeader();
+    corsOptions.WithOrigins(allowedHosts).AllowAnyMethod().AllowAnyHeader()
+    .WithExposedHeaders(new string[] { "total-records-amount", "pages-amount" });
   });
 });
 

@@ -25,7 +25,8 @@ public class CustomersController:ControllerBase
 
     int pagesAmount = PaginationOperations.CalculatePagesAmount(result.TotalRecordsAmount, pagination.PageSize);
 
-    HttpContext.InsertParameterInHeader("pagesAmount",pagesAmount.ToString());
+    HttpContext.InsertParameterInHeader("total-records-amount", result.TotalRecordsAmount.ToString());
+    HttpContext.InsertParameterInHeader("pages-amount",pagesAmount.ToString());
     
     return result.DbResults;
   }

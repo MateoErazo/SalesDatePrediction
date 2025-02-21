@@ -8,5 +8,8 @@ public interface ICustomersRepository
   Task<DbResultsWithPaginationValuesDTO<CustomerOrderPrediction>> 
     GetCustomersWithOrderPredictionsAsync(PaginationDTO paginationDTO);
 
+  Task<DbResultsWithPaginationValuesDTO<CustomerOrderPrediction>>
+    GetCustomersWithOrderPredictionsFilteredAsync(OrderPredictionFilterDTO ordersFilter);
+
   Task<Customer?> GetCustomerByIdAsync(int customerId);
 }

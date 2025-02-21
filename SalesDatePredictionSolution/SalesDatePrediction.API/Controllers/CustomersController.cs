@@ -31,4 +31,19 @@ public class CustomersController:ControllerBase
     return result.DbResults;
   }
 
+  [HttpGet("order-predictions/filters")]
+  public async Task<IEnumerable<CustomerOrderPredictionDTO?>>
+    GetCustomersWithOrdersPredictionsFiltered([FromQuery] OrderPredictionFilterDTO ordersFilter)
+  {
+    DbResultsWithPaginationValuesDTO<CustomerOrderPredictionDTO> result =
+      await _customersService.GetCustomersWithOrderPredictionsFiltered(ordersFilter);
+
+    int pagesAmount = PaginationOperations.CalculatePagesAmount(result.TotalRecordsAmount, ordersFilter.PageSize);
+
+    HttpContext.InsertParameterInHeader("total-records-amount", result.TotalRecordsAmount.ToString());
+    HttpContext.InsertParameterInHeader("pages-amount", pagesAmount.ToString());
+
+    return result.DbResults;
+  }
+
 }

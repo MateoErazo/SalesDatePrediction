@@ -31,4 +31,13 @@ internal class CustomersService : ICustomersService
     Customer? customer = await _customersRepository.GetCustomerByIdAsync(customerId);
     return _mapper.Map<CustomerDTO?>(customer);
   }
+
+  public async Task<DbResultsWithPaginationValuesDTO<CustomerOrderPredictionDTO>> 
+    GetCustomersWithOrderPredictionsFiltered(OrderPredictionFilterDTO ordersFilter)
+  {
+    DbResultsWithPaginationValuesDTO<CustomerOrderPrediction> customerPredictionsFiltered =
+      await _customersRepository.GetCustomersWithOrderPredictionsFilteredAsync(ordersFilter);
+
+    return _mapper.Map<DbResultsWithPaginationValuesDTO<CustomerOrderPredictionDTO>>(customerPredictionsFiltered);
+  }
 }

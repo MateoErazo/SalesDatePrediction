@@ -1,12 +1,14 @@
 ﻿using AutoMapper.Configuration.Annotations;
 using Dapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using SalesDatePrediction.Core.DTO;
 using SalesDatePrediction.Core.Entities;
 using SalesDatePrediction.Core.RepositoryContracts;
 using SalesDatePrediction.Infrastructure.DbContext;
 using System.Data;
 using System.Data.Common;
+using System.Text;
 
 namespace SalesDatePrediction.Infrastructure.Repositories;
 
@@ -99,6 +101,81 @@ internal class CustomersRepository : ICustomersRepository
     parameters.Add("Offset", (paginationDTO.Page - 1) * paginationDTO.PageSize);
     parameters.Add("PageSize", paginationDTO.PageSize);
     
+    var result = await _dbContext.DbConnection.QueryAsync<CustomerOrderPrediction>(paginatedQuery, parameters);
+
+    return new DbResultsWithPaginationValuesDTO<CustomerOrderPrediction>()
+    {
+      TotalRecordsAmount = totalRecords,
+      DbResults = result
+    };
+  }
+
+  public async Task<DbResultsWithPaginationValuesDTO<CustomerOrderPrediction>> 
+    GetCustomersWithOrderPredictionsFilteredAsync(OrderPredictionFilterDTO ordersFilter)
+  {
+    string baseQuery = $@"
+      -- Calculate the intervals between orders for each customer
+      WITH Intervals AS (
+          SELECT 
+	      ord.custid,
+          DATEDIFF(DAY, LAG(ord.orderdate) OVER (PARTITION BY ord.custid ORDER BY ord.orderdate), ord.orderdate) AS DaysBetweenOrders
+          FROM Sales.Orders ord
+      ),
+
+      -- Calculate the average number of days between orders per customer
+      Averages AS (
+          SELECT 
+          intv.custid,
+	      AVG(intv.DaysBetweenOrders) AS DaysAverage
+          FROM Intervals intv
+          WHERE intv.DaysBetweenOrders IS NOT NULL -- Excluir registros sin intervalo
+          GROUP BY intv.custid
+      ),
+
+      -- Get the date of the last order per customer
+      LastOrders AS (
+          SELECT 
+          ord.custid,
+          MAX(ord.orderdate) AS LastOrderDate
+          FROM Sales.Orders ord
+          GROUP BY ord.custid
+      )
+      ";
+
+    string totalRecordsColumn = @"
+          SELECT
+          COUNT(*) AS TotalRecords
+          FROM LastOrders laor
+          INNER JOIN Averages avgs ON laor.custid = avgs.custid
+          INNER JOIN Sales.Customers cust ON cust.custid = laor.custid";
+
+    string queryColumns = @"
+          -- Calculate the next estimated order date for each customer
+          SELECT
+          cust.custid AS CustomerId,
+	        cust.companyname AS CustomerName,
+          laor.LastOrderDate AS LastOrderDate,
+          DATEADD(DAY, avgs.DaysAverage, laor.LastOrderDate) AS NextPredictedOrder
+          FROM LastOrders laor
+          INNER JOIN Averages avgs ON laor.custid = avgs.custid
+          INNER JOIN Sales.Customers cust ON cust.custid = laor.custid";
+
+    DynamicParameters parameters = new DynamicParameters();
+
+    if (!string.IsNullOrEmpty(ordersFilter.CustomerName))
+    {
+      string customerNameFilter = "WHERE cust.companyname LIKE '%'+ @CustomerName +'%'";
+      totalRecordsColumn = $"{totalRecordsColumn} {customerNameFilter}";
+      queryColumns = $"{queryColumns} {customerNameFilter}";
+      parameters.Add("CustomerName", ordersFilter.CustomerName);
+    }
+
+    int totalRecords = await _dbContext.DbConnection.ExecuteScalarAsync<int>($"{baseQuery}{totalRecordsColumn}", parameters);
+
+    string paginatedQuery = $"{baseQuery}{queryColumns} ORDER BY laor.LastOrderDate DESC OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+    parameters.Add("Offset", (ordersFilter.Page - 1) * ordersFilter.PageSize);
+    parameters.Add("PageSize", ordersFilter.PageSize);
+
     var result = await _dbContext.DbConnection.QueryAsync<CustomerOrderPrediction>(paginatedQuery, parameters);
 
     return new DbResultsWithPaginationValuesDTO<CustomerOrderPrediction>()

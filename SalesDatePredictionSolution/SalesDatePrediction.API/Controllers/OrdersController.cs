@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalesDatePrediction.API.Utilities;
 using SalesDatePrediction.Core.DTO;
 using SalesDatePrediction.Core.ServiceContracts;
 
@@ -15,10 +16,19 @@ public class OrdersController: ControllerBase
     _ordersService = ordersService;
   }
 
-  [HttpGet("customers/{customerId:int}")]
-  public async Task<IEnumerable<OrderDTO?>> GetCustomerOrdersByCustomerId(int customerId)
+  [HttpGet("customers/filters")]
+  public async Task<IEnumerable<OrderDTO?>> GetCustomerOrdersByCustomerId([FromQuery] OrderFilterDTO orderFilter)
   {
-    return await _ordersService.GetOrdersByCustomerId(customerId);
+    DbResultsWithPaginationValuesDTO<OrderDTO> result = 
+      await _ordersService.GetOrdersByOrderFilter(orderFilter);
+
+    int pagesAmount = PaginationOperations.CalculatePagesAmount(result.TotalRecordsAmount, orderFilter.PageSize);
+
+    HttpContext.InsertParameterInHeader("total-records-amount", result.TotalRecordsAmount.ToString());
+    HttpContext.InsertParameterInHeader("pages-amount", pagesAmount.ToString());
+
+
+    return result.DbResults;
   }
 
   [HttpPost]

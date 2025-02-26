@@ -61,12 +61,12 @@ internal class OrdersService : IOrdersService
       with { Success = true };
   }
 
-  public async Task<IEnumerable<OrderDTO?>> GetOrdersByCustomerId(int customerId)
+  public async Task<DbResultsWithPaginationValuesDTO<OrderDTO>> GetOrdersByOrderFilter(OrderFilterDTO orderFilter)
   {
-    IEnumerable<Order?> orders = 
-      await _ordersRepository.GetOrdersByCustomerIdAsync(customerId);
+    DbResultsWithPaginationValuesDTO<Order> orders = 
+      await _ordersRepository.GetOrdersByOrderFilterAsync(orderFilter);
 
-    return _mapper.Map<IEnumerable<OrderDTO?>>(orders);
+    return _mapper.Map<DbResultsWithPaginationValuesDTO<OrderDTO>>(orders);
   }
 
   public async Task<bool> CheckOrderCreationDependenciesExistInDb(OrderCreationDTO orderCreationDTO)

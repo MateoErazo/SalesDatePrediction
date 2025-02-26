@@ -12,8 +12,12 @@ namespace SalesDatePrediction.Core.Mappers
   public class DbResultsWithPaginationValuesMappingProfile: Profile
   {
     public DbResultsWithPaginationValuesMappingProfile() {
+
       CreateMap<DbResultsWithPaginationValuesDTO<CustomerOrderPrediction>, 
         DbResultsWithPaginationValuesDTO<CustomerOrderPredictionDTO>>();
+
+      CreateMap<DbResultsWithPaginationValuesDTO<Order>, 
+        DbResultsWithPaginationValuesDTO<OrderDTO>>();
     }
   }
 }

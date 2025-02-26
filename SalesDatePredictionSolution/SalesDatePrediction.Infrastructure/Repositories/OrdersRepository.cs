@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SalesDatePrediction.Core.DTO;
 using SalesDatePrediction.Core.Entities;
 using SalesDatePrediction.Core.RepositoryContracts;
 using SalesDatePrediction.Infrastructure.DbContext;
@@ -99,9 +100,15 @@ internal class OrdersRepository : IOrdersRepository
     }
   }
 
-  public async Task<IEnumerable<Order?>> GetOrdersByCustomerIdAsync(int customerId)
+  public async Task<DbResultsWithPaginationValuesDTO<Order>> 
+    GetOrdersByOrderFilterAsync(OrderFilterDTO orderFilterDTO)
   {
-    string query = @"SELECT
+
+    string recordsAmountColumn = @"
+          SELECT
+          COUNT(*) AS TotalRecords";
+
+    string queryColumns = @"SELECT
                   ord.orderid,
                   ord.orderdate,
                   ord.empid,
@@ -112,12 +119,32 @@ internal class OrdersRepository : IOrdersRepository
                   ord.shipaddress,
                   ord.shipcity,
                   ord.shipcountry,
-                  ord.freight
+                  ord.freight";
+
+    string baseQuery = @"
                   FROM
                   Sales.Orders ord
-                  WHERE ord.custid = @CustomerId
-                  ORDER BY ord.orderid DESC";
+                  WHERE ord.custid = @CustomerId";
 
-    return await _dbContext.DbConnection.QueryAsync<Order?>(query, new {CustomerId = customerId});
+
+    int recordsAmount = await _dbContext.DbConnection.ExecuteScalarAsync<int>
+      ($"{recordsAmountColumn} {baseQuery}", new { orderFilterDTO.CustomerId});
+
+    DynamicParameters parameters = new DynamicParameters();
+
+    string paginatedQuery = $"{queryColumns} {baseQuery} ORDER BY ord.orderid DESC OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+    parameters.Add("CustomerId", orderFilterDTO.CustomerId);
+    parameters.Add("Offset", (orderFilterDTO.Page - 1) * orderFilterDTO.PageSize);
+    parameters.Add("PageSize", orderFilterDTO.PageSize);
+
+    var result = await _dbContext.DbConnection.QueryAsync<Order>(paginatedQuery, parameters);
+
+    return new DbResultsWithPaginationValuesDTO<Order>()
+    {
+      DbResults = result,
+      TotalRecordsAmount = recordsAmount
+    };
+
   }
 }

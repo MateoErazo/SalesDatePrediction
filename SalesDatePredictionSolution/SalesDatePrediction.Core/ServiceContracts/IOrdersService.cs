@@ -5,7 +5,7 @@ namespace SalesDatePrediction.Core.ServiceContracts;
 
 public interface IOrdersService
 {
-  Task<IEnumerable<OrderDTO?>> GetOrdersByCustomerId(int customerId);
+  Task<DbResultsWithPaginationValuesDTO<OrderDTO>> GetOrdersByOrderFilter(OrderFilterDTO orderFilter);
   Task<bool> CheckOrderCreationDependenciesExistInDb(OrderCreationDTO orderCreation);
   Task<OrderCreationResultDTO?> CreateOrderWithProduct(OrderWithProductCreationDTO orderWithProductCreation);
 }

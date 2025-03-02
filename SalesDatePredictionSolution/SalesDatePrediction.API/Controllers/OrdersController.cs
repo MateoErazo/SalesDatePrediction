@@ -16,7 +16,7 @@ public class OrdersController: ControllerBase
     _ordersService = ordersService;
   }
 
-  [HttpGet("customers/filters")]
+  [HttpGet("filters")]
   public async Task<IEnumerable<OrderDTO?>> GetCustomerOrdersByCustomerId([FromQuery] OrderFilterDTO orderFilter)
   {
     DbResultsWithPaginationValuesDTO<OrderDTO> result = 
